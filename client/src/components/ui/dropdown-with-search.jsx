@@ -8,7 +8,7 @@ import { Button } from "./button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./command";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-export default function DropdownWithSearch({ dropdownList, value, setValue }) {
+export default function DropdownWithSearch({ dropdownList, value, setValue, searchedValue, setSearchedValue }) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -19,9 +19,15 @@ export default function DropdownWithSearch({ dropdownList, value, setValue }) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0 bg-white">
         <Command>
-          <CommandInput placeholder="Search crypto..." />
+          <CommandInput
+            value={searchedValue}
+            placeholder="Search crypto..."
+            onValueChange={(value) => {
+              setSearchedValue(value);
+            }}
+          />
           <CommandEmpty>No crypto found.</CommandEmpty>
           <CommandGroup>
             {dropdownList.map((item) => (

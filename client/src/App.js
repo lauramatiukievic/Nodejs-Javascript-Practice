@@ -4,17 +4,20 @@ import { DatePickerWithRange } from "components/ui/date-picker-with-range";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "components/ui/button";
-import addDays from "date-fns/addDays";
+import subDays from "date-fns/subDays";
 import getTime from "date-fns/getTime";
 import { useToast } from "components/ui/use-toast";
+import { CryptoPriceChart } from "components/ui/crypto-price-chart";
+import { format } from "date-fns";
 
 function App() {
   const [cryptocurrencies, setCryptocurrencies] = useState([]);
   const [selectedCryptocurrencyId, setSelecetedCryptocurrencyId] = useState("");
   const [cryptocurrencyData, setCryptocurrencyData] = useState([]);
+  const [searchedCrypto, setSearchedCrypto] = useState("");
   const [dateRange, setDateRange] = useState({
-    from: new Date(),
-    to: addDays(new Date(), 20),
+    from: subDays(new Date(), 7),
+    to: new Date(),
   });
 
   const { toast } = useToast();
@@ -23,15 +26,14 @@ function App() {
     axios
       .get(`https://api.coincap.io/v2/assets/${selectedCryptocurrencyId}/history?interval=d1&start=${getTime(dateRange.from)}&end=${getTime(dateRange.to)}`)
       .then((response) => response.data.data)
-      .then((times) => {
-        const result = times.map((time) => {
-          return { price: time.priceUsd, time: time.time };
+      .then((data) => {
+        const result = data.map((time) => {
+          return { total: time.priceUsd, name: format(new Date(time.time), "yyyy-MM-dd") };
         });
         setCryptocurrencyData(result);
-        console.log(result);
       })
       .catch((error) => console.log("error", error));
-    saveUserAction();
+    saveUserActions();
   };
 
   useEffect(() => {
@@ -47,29 +49,54 @@ function App() {
       .catch((error) => console.log("Failed to get cryptocurrencies", error));
   }, []);
 
-  const saveUserAction = () => {
+  const postUserAction = (action) => {
     axios
-      .post(`http://localhost:3005/userAction`, {
-        actionType: "Selected",
-        actionValue: selectedCryptocurrencyId,
-      })
+      .post(`http://localhost:3005/userAction`, action)
       .then((response) => {
-        toast({ description: "User actions saved successfully" });
+        toast({ description: `User action ${action.actionType} saved successfully` });
       })
       .catch((error) => console.log("Failed to save user action", error));
+  };
+
+  const saveUserActions = () => {
+    const selectAction = {
+      actionType: "Selected",
+      actionValue: selectedCryptocurrencyId,
+    };
+
+    postUserAction(selectAction);
+
+    if (searchedCrypto !== "") {
+      const searchedAction = {
+        actionType: "Searched",
+        actionValue: searchedCrypto,
+      };
+      postUserAction(searchedAction);
+    }
   };
 
   if (!cryptocurrencies) {
     return <div>Loading...</div>;
   }
 
+  const isButtonDisabled = () => {
+    if (selectedCryptocurrencyId === "") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
-    <div className=" flex items-center ">
-      <DropdownWithSearch dropdownList={cryptocurrencies} value={selectedCryptocurrencyId} setValue={setSelecetedCryptocurrencyId} />
-      <DatePickerWithRange date={dateRange} setDate={setDateRange} />
-      <Button onClick={() => getCryptoCurrencyData()} variant="outline">
-        Mygt
-      </Button>
+    <div className=" flex flex-col items-center ">
+      <div className="flex flex-row gap-4 ">
+        <DropdownWithSearch dropdownList={cryptocurrencies} value={selectedCryptocurrencyId} setValue={setSelecetedCryptocurrencyId} searchedValue={searchedCrypto} setSearchedValue={setSearchedCrypto} />
+        <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+        <Button onClick={getCryptoCurrencyData} variant="outline" disabled={isButtonDisabled()}>
+          Mygt
+        </Button>
+      </div>
+      {cryptocurrencyData && <CryptoPriceChart data={cryptocurrencyData} />}
     </div>
   );
 }
