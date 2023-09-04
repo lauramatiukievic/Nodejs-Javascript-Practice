@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "lib/utils";
@@ -9,12 +9,7 @@ import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "./popover";
 
-export function DatePickerWithRange({ className }) {
-  const [date, setDate] = React.useState({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
-
+export function DatePickerWithRange({ className, date, setDate }) {
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
