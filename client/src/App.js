@@ -6,6 +6,7 @@ import axios from "axios";
 import { Button } from "components/ui/button";
 import addDays from "date-fns/addDays";
 import getTime from "date-fns/getTime";
+import { useToast } from "components/ui/use-toast";
 
 function App() {
   const [cryptocurrencies, setCryptocurrencies] = useState([]);
@@ -15,6 +16,8 @@ function App() {
     from: new Date(),
     to: addDays(new Date(), 20),
   });
+
+  const { toast } = useToast();
 
   const getCryptoCurrencyData = async () => {
     axios
@@ -28,6 +31,7 @@ function App() {
         console.log(result);
       })
       .catch((error) => console.log("error", error));
+    saveUserAction();
   };
 
   useEffect(() => {
@@ -40,8 +44,20 @@ function App() {
         });
         setCryptocurrencies(result);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log("Failed to get cryptocurrencies", error));
   }, []);
+
+  const saveUserAction = () => {
+    axios
+      .post(`http://localhost:3005/userAction`, {
+        actionType: "Selected",
+        actionValue: selectedCryptocurrencyId,
+      })
+      .then((response) => {
+        toast({ description: "User actions saved successfully" });
+      })
+      .catch((error) => console.log("Failed to save user action", error));
+  };
 
   if (!cryptocurrencies) {
     return <div>Loading...</div>;
