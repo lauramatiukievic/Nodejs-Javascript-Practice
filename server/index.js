@@ -1,14 +1,18 @@
 import express from "express";
 import mongoose from "mongoose";
-
-import UserActionModel from "./moduls/UserAction.js";
+import dotenv from "dotenv";
+import UserActionModel from "./models/UserAction.js";
 import cors from "cors";
 
-mongoose.connect("mongodb+srv://javascript:practise1052@cluster0.zlajbgs.mongodb.net/cryptodb?retryWrites=true&w=majority");
+dotenv.config();
+
+mongoose.connect(process.env.MONGODB_URL);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const port = process.env.PORT || 3005;
 
 app.post("/userAction", async (req, res) => {
   const userAction = req.body;
@@ -18,6 +22,6 @@ app.post("/userAction", async (req, res) => {
   res.json(userAction);
 });
 
-app.listen(3005, () => {
-  console.log("ok");
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
 });
