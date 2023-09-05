@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, XCircleIcon } from "lucide-react";
 
 import { cn } from "lib/utils";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
-import { Popover, PopoverTrigger, PopoverContent } from "./popover";
+import { Popover, PopoverTrigger, PopoverContent, PopoverClose } from "./popover";
 
 export function DatePickerWithRange({ className, date, setDate }) {
   return (
@@ -30,6 +30,9 @@ export function DatePickerWithRange({ className, date, setDate }) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0 bg-white" align="start">
+          <PopoverClose>
+            <XCircleIcon />
+          </PopoverClose>
           <Calendar initialFocus mode="range" defaultMonth={date?.from} selected={date} onSelect={setDate} numberOfMonths={2} />
         </PopoverContent>
       </Popover>

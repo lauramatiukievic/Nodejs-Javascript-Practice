@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export default function DropdownWithSearch({ dropdownList, value, setValue, searchedValue, setSearchedValue }) {
   const [open, setOpen] = React.useState(false);
+  const [isSearchInputInvalid, setIsSearchInputInvalid] = React.useState();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -21,10 +22,16 @@ export default function DropdownWithSearch({ dropdownList, value, setValue, sear
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-white">
         <Command>
+          {isSearchInputInvalid && <span className="text-red-600 text-xs p-2">Search input must be less than 30</span>}
           <CommandInput
             value={searchedValue}
             placeholder="Search crypto..."
             onValueChange={(value) => {
+              if (value.length <= 30) {
+                setIsSearchInputInvalid(false);
+              } else {
+                setIsSearchInputInvalid(true);
+              }
               setSearchedValue(value);
             }}
           />

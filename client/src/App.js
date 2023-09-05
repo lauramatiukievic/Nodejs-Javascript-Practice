@@ -88,15 +88,15 @@ function App() {
   };
 
   return (
-    <div className=" flex flex-col items-center ">
-      <div className="flex flex-row gap-4 ">
+    <div className=" flex flex-col items-center mt-8">
+      <div className="sm:flex sm:flex-row gap-4 flex flex-col ">
         <DropdownWithSearch dropdownList={cryptocurrencies} value={selectedCryptocurrencyId} setValue={setSelecetedCryptocurrencyId} searchedValue={searchedCrypto} setSearchedValue={setSearchedCrypto} />
         <DatePickerWithRange date={dateRange} setDate={setDateRange} />
         <Button onClick={getCryptoCurrencyData} variant="outline" disabled={isButtonDisabled()}>
-          Mygt
+          Get data
         </Button>
       </div>
-      {cryptocurrencyData && <CryptoPriceChart data={cryptocurrencyData} />}
+      <CryptoPriceChart data={cryptocurrencyData} />
     </div>
   );
 }
