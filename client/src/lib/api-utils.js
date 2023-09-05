@@ -2,9 +2,12 @@ import axios from "axios";
 import { format } from "date-fns";
 import getTime from "date-fns/getTime";
 
+const COINCAP_URL = process.env.REACT_APP_COINCAP_URL;
+const MY_SERVER_URL = process.env.REACT_APP_MY_SERVER_URL;
+
 const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
   return axios
-    .get(`https://api.coincap.io/v2/assets/${cryptocurrencyId}/history?interval=d1&start=${getTime(dateRange.from)}&end=${getTime(dateRange.to)}`)
+    .get(`${COINCAP_URL}/assets/${cryptocurrencyId}/history?interval=d1&start=${getTime(dateRange.from)}&end=${getTime(dateRange.to)}`)
     .then((response) => response.data.data)
     .then((data) => {
       return data.map((time) => {
@@ -16,7 +19,7 @@ const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
 
 const getCryptocurrencies = async () => {
   return axios
-    .get("https://api.coincap.io/v2/assets?limit=20")
+    .get(`${COINCAP_URL}/assets?limit=20`)
     .then((response) => response.data.data)
     .then((coins) => {
       return coins.map((coin) => {
@@ -27,7 +30,7 @@ const getCryptocurrencies = async () => {
 };
 
 const postUserAction = async (action) => {
-  return axios.post(`http://localhost:3005/userAction`, action).catch((error) => console.log("Failed to save user action", error));
+  return axios.post(`${MY_SERVER_URL}/userAction`, action).catch((error) => console.log("Failed to save user action", error));
 };
 
 const ApiUtils = {
