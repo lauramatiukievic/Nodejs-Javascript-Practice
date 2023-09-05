@@ -14,4 +14,6 @@
 
 ### from client directory: `npm test` runs tests
 
+### localhost:8081 to access mongo
+
 ### Project is deployed to GCP: `http://34.118.32.208:3000/`
