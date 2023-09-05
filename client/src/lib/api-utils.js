@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import getTime from "date-fns/getTime";
 
 const COINCAP_URL = process.env.REACT_APP_COINCAP_URL;
-const MY_SERVER_URL = process.env.REACT_APP_MY_SERVER_URL;
+const MY_SERVER_URL = `http://${window.location.hostname}:3005`;
 
 const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
   return axios
