@@ -6,8 +6,9 @@ const COINCAP_URL = process.env.REACT_APP_COINCAP_URL;
 const MY_SERVER_URL = `http://${window.location.hostname}:3005`;
 
 const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
+  const url = getCryptocurrencyDataUrl(cryptocurrencyId, dateRange);
   return axios
-    .get(`${COINCAP_URL}/assets/${cryptocurrencyId}/history?interval=d1&start=${getTime(dateRange.from)}&end=${getTime(dateRange.to)}`)
+    .get(url)
     .then((response) => response.data.data)
     .then((data) => {
       return data.map((time) => {
@@ -15,6 +16,14 @@ const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
       });
     })
     .catch((error) => console.log("Failed to get cryptocurrency data", error));
+};
+
+const getCryptocurrencyDataUrl = (cryptocurrencyId, dateRange) => {
+  let url = `${COINCAP_URL}/assets/${cryptocurrencyId}/history?interval=d1`;
+  if (!dateRange || !dateRange.from || !dateRange.to) return url;
+  let startParameter = dateRange.from ? `&start=${getTime(dateRange.from)}` : "";
+  let endParameter = dateRange.to ? `&end=${getTime(dateRange.to)}` : "";
+  return url.concat(startParameter).concat(endParameter);
 };
 
 const getCryptocurrencies = async () => {
