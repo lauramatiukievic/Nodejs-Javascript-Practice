@@ -10,4 +10,8 @@
 
 #### 5. from client directory: `npm install` then `npm start`
 
+#
+
+### from client directory: `npm test` runs tests
+
 ### Project is deployed to GCP: `http://34.118.32.208:3000/`
