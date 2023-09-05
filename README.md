@@ -6,8 +6,8 @@
 
 #### 3. in server directory copy paste .env.example and rename to .env
 
-#### 4. from server directory: `npm start`
+#### 4. from server directory: `npm install` then `npm start`
 
-#### 5. from client directory: `npm start`
+#### 5. from client directory: `npm install` then `npm start`
 
 ### Project is deployed to GCP: `http://34.118.32.208:3000/`
