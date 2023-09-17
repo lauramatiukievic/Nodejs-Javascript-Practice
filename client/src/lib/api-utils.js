@@ -11,8 +11,8 @@ const getCryptocurrencyData = async (cryptocurrencyId, dateRange) => {
     .get(url)
     .then((response) => response.data.data)
     .then((data) => {
-      return data.map((time) => {
-        return { total: time.priceUsd, name: format(new Date(time.time), "yyyy-MM-dd") };
+      return data.map((cryptocurrency) => {
+        return { total: cryptocurrency.priceUsd, name: format(new Date(cryptocurrency.time), "yyyy-MM-dd") };
       });
     })
     .catch((error) => console.log("Failed to get cryptocurrency data", error));
@@ -32,7 +32,7 @@ const getCryptocurrencies = async () => {
     .then((response) => response.data.data)
     .then((coins) => {
       return coins.map((coin) => {
-        return { id: coin.id, label: coin.name, value: coin.symbol };
+        return { id: coin.id, label: coin.name };
       });
     })
     .catch((error) => console.log("Failed to get cryptocurrencies", error));
